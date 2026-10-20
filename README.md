@@ -42,7 +42,7 @@
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
 
-
+     TakeMeter is a text classifier for questions posted on Mathematics Stack Exchange. I collected 500 public questions and will use at least 200 labeled examples to train a model that identifies the type of mathematical help someone is requesting. The classifier will distinguish between proof-related questions, computational problems, and conceptual explanations. I will fine-tune DistilBERT on these examples and evaluate how well it classifies questions it has not seen during training.
 
 ---
 
@@ -54,34 +54,66 @@
      The decision rule is worth a point on its own and it's the thing most
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
-### `label_one`
+### `proof_help`
 
 **Definition:**
+A question whose primary objective is to prove or disprove a mathematical claim, construct a counterexample, or verify or correct the logical validity of a proof.
 
-**Example 1:**
->
+**Example 1:** 
+> Prove that the Cauchy product of two absolutely convergent series converges absolutely 
+
+The author presents a proof attempt and asks for help justifying the argument.
 
 **Example 2:**
->
+> What is wrong with this proof of commutativity of vector addition? 
 
-### `label_two`
+The author asks which step in an existing mathematical proof is invalid.
+
+### `computation`
 
 **Definition:**
+A question whose primary objective is to calculate, simplify, evaluate, or solve a specified mathematical expression, equation, or quantity.
 
 **Example 1:**
->
+>How to calculate a type of alternating sums
+
+The author wants to evaluate an alternating series and understand how to calculate sums of that form.
 
 **Example 2:**
->
+>Solving an equation involving floor and fractional parts
+
+The author asks to solve an equation and determine a specific numerical expression from its possible solutions.
+
+### `conceptual`
+
+**Definition:**
+A question whose primary objective is to understand the meaning, interpretation, intuition, or motivation behind a mathematical concept rather than obtain a proof or computed result.
+
+**Example 1:**
+>Why not think of lattices as Zⁿ?
+
+The author wants to understand why lattices are treated as abstract mathematical objects rather than simply as Zⁿ.
+
+**Example 2:**
+>Conceptualizing subgaussian norms
+
+The author asks for intuition about subgaussian norms and how to interpret their mathematical meaning.
+
 
 ### The hardest boundary
 
-**Which two labels:**
+**Which two labels:** proof_help and conceptual
 
 **The decision rule I used every time:**
 <!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
      if the tone is heated." -->
+If the main goal of a question is to construct, verify, correct, or disprove a formal mathematical argument, I classify it as proof_help, even if the author uses words such as "explain" or "why." If the author mainly wants to understand the meaning or intuition behind a concept without requesting a formal proof, I classify it as conceptual.
 
+For example, the question asking what is wrong with a proof of vector addition belongs to proof_help because the author wants to identify an invalid step in a specific argument, not simply understand what vector addition means.
+
+For questions that could fall between computation and proof_help, I use the requested outcome to decide: finding a particular solution or value is computation, while proving that a mathematical statement holds is proof_help.
+
+Questions primarily requesting references, discussing community moderation, or asking about broader mathematical research topics are outside the scope of these three labels. I will apply this exclusion rule consistently when selecting the training examples.
 
 
 ---
