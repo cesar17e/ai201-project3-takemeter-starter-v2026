@@ -1,143 +1,110 @@
-# Acceptance criteria — TakeMeter
+# Acceptance Criteria — TakeMeter
 
-Five criteria that say what "working" means for this classifier, written in
-unit 5 **before** anything was trained.
+These five criteria define what I consider a successful mathematics question classifier. I chose the targets before training so I can evaluate the model against them later.
 
-**All five are yours this time.** None are given. You've had two projects of
-practice.
+TakeMeter will fine-tune `distilbert-base-uncased` to classify Mathematics Stack Exchange questions into three categories: `proof_help`, `computation`, and `conceptual`.
 
-An acceptance criterion names a number. *"The model is accurate"* is an
-opinion. *"Every label has an F1 of at least 0.60 on the held-out set"* is a
-criterion.
+I collected 500 candidate questions and plan to use at least 200 human-reviewed examples for training and evaluation.
 
-Under each, write a sentence or two on **why that number**. A reason that says
-something about your data or your taxonomy earns credit — *"I picked 0.60 F1
-for `reaction` because it's my smallest label and I only have about 50
-examples of it"*. A reason that could be attached to any project does not.
+**How the criteria will be evaluated:**
 
-> Missing your own targets next unit costs you nothing. Setting a target so
-> easy you can't miss it does.
+Criteria 1, 2, 3, and 5 will be measured using the held-out test set from the notebook's 70/15/15 split. In Unit 6, each criterion must pass across all three random seeds (42, 7, and 2024).
+
+Criterion 4 will be checked using the entire labeled dataset before splitting.
 
 ---
 
-## Pick numbers you can defend
+## 1. Overall Accuracy of at Least 0.70
 
-Not numbers that sound impressive. Three labels means a coin-flip guesser gets
-about 33%, so a target of 0.40 is barely a target. Your number should sit
-somewhere you'd honestly call useful.
+The classifier must correctly categorize at least **70% of the questions** in the held-out test set for each seed.
 
-**Cover at least three of these five areas.** They're here as prompts, not as a
-form to fill in — a criterion that fits none of them is fine if it names a
-number.
-
-| Area | A question it could answer |
-|---|---|
-| Overall accuracy | How often does it need to be right to be worth using? |
-| Per-label performance | Is one label allowed to be much worse than the others? |
-| Balance | How lopsided can your label counts get before it's a problem? |
-| Consistency | If someone else labelled the same posts, how often should you agree? |
-| Confidence | Should a confident prediction be right more often than an unsure one? |
-
-Two things worth knowing before you pick numbers, because both will affect
-whether you hit them:
-
-- **Your smallest label will have the jumpiest score.** If a label has 50
-  examples, about 8 land in the test split. An F1 computed on 8 examples moves
-  a lot between seeds. A target for that label should be looser than one for
-  your biggest label, and saying so is a good reason.
-- **Unit 6 tests across three seeds, and the target has to hold across all
-  three.** A target of 0.65 against results of 0.71, 0.62, 0.68 is a **miss**.
-  Pick with that in mind — it is stricter than it first sounds.
-
----
-
-## 1.
-
-<!-- Your criterion. It must name a number. -->
-
-
+**How to check:** Use the `accuracy` value in `results.json` and `results_three_seeds_before.json`. Each run must have an accuracy of at least `0.70`.
 
 **Why this target:**
 
-
+I chose 70% because correctly identifying the type of mathematical help in seven out of ten questions would make the classifier useful for basic question sorting. Some questions may be difficult to classify, especially those that ask for both proofs and conceptual explanations. With three categories and a maximum class share of 60%, this target is also higher than simply predicting the most common label in the full dataset. I will compare it with the actual majority-label share in each test split.
 
 ---
 
-## 2.
+## 2. Macro F1 Score of at Least 0.65
 
-<!-- Your criterion. -->
+The classifier must achieve a **macro F1 score of at least 0.65** on the held-out test set for each seed.
 
-
+**How to check:** Use the `f1_macro` value returned by the notebook's `evaluate()` function. Each run must achieve at least `0.65`.
 
 **Why this target:**
 
-
+I chose 0.65 because I want the model to perform reasonably well across all three categories, not just the most common one. Macro F1 gives each label equal importance. This target also allows for some mistakes because we are training on a relatively small dataset of around 200 questions.
 
 ---
 
-## 3.
+## 3. F1 Score of at Least 0.60 for Every Label
 
-<!-- Your criterion. -->
+Each label (`proof_help`, `computation`, and `conceptual`) must achieve an **F1 score of at least 0.60** on the held-out test set for each seed.
 
+If any label falls below 0.60 in any run, this criterion is not met.
 
+**How to check:** Use `per_label[label]["f1"]` from the notebook's evaluation results. Also record the number of test examples for each label using `per_label[label]["support"]`.
 
 **Why this target:**
 
-
+I chose 0.60 because I don't want the classifier to perform well overall while struggling with one category. For example, `proof_help` and `conceptual` may be confused because both types of questions can include words like "why" or "explain." This target makes sure each label has acceptable performance while accounting for our small test set.
 
 ---
 
-## 4.
+## 4. Each Label Represents Between 20% and 60% of the Dataset
 
-<!-- Your criterion. -->
+Each of the three labels must account for **at least 20% and no more than 60%** of the final `labels.csv` dataset.
 
+The dataset must also contain at least 200 human-reviewed questions.
 
+**How to check:** Count the examples for each label and divide by the total number of examples. Every label must have a share between `0.20` and `0.60`, inclusive.
 
 **Why this target:**
 
-
+I chose this range to prevent one category from dominating the dataset. With 200 questions, the 20% minimum ensures that each category has at least 40 examples. The 60% maximum is also stricter than CodePath's required 70% limit. This should help the model learn all three categories instead of mainly predicting the most common one.
 
 ---
 
-## 5.
+## 5. More Confident Predictions Should Be More Accurate
 
-<!-- Your criterion. -->
+For each seed, the **most-confident third of predictions must have an accuracy of at least 0.80**.
 
+Their accuracy must also be **at least 0.10 (10 percentage points) higher** than the least-confident third.
 
+Both conditions must be met.
+
+**How to check:** Use the values from the notebook's `confidence_report()` function:
+
+- `accuracy_most_confident_third >= 0.80`
+- `accuracy_most_confident_third - accuracy_least_confident_third >= 0.10`
+
+Compare the unrounded values, allowing a small floating-point tolerance of `1e-12` for the difference.
 
 **Why this target:**
 
-
+I chose these targets because the model's confidence should help identify which questions may need human review. If the model is highly confident, I would expect its predictions to be more reliable. This could be especially useful for questions that fall between `proof_help` and `conceptual`. However, with only about 30 test questions, each confidence group will be small, so the results may vary between runs.
 
 ---
 
-<!-- ─────────────────────────────────────────────────────────────────────────
-     UNIT 6 — read this before you change anything above.
+<!--
+UNIT 6 — IMPORTANT
 
-     If a criterion turns out to be BROKEN rather than merely unmet, you can
-     revise it, and that earns credit. But never delete or edit the original
-     line. Add the revision underneath, like this:
+Keep the original criteria and targets unchanged when evaluating the model.
 
-         ## 2. Every label performs acceptably
+If a criterion is not met, explain why and attempt an improvement.
+Do not lower a target simply because the model failed to reach it.
 
-         The model performs well on all labels.
+If a criterion cannot actually be measured as written, you may add a
+clarified version underneath the original criterion. Explain why the
+revision was necessary.
 
-         **Why this target:** ...
+Example:
 
-         > **Revised in unit 6:** Every label has an F1 of at least 0.60 on
-         > the held-out set.
-         >
-         > **Why revised:** "performs well" gave me nothing to check. I
-         > couldn't produce a verdict from it at all.
+> Revised in Unit 6: Every label must achieve an F1 score of at least
+> 0.60 on the held-out test set.
+>
+> Why revised: The original wording was too vague to measure.
 
-     That's a revision because the criterion couldn't be MEASURED.
-
-     Lowering a target because you missed it is not a revision, and it costs
-     you the point:
-
-         ✗ "Overall accuracy of at least 0.65" → "at least 0.55", because
-            0.65 turned out to be optimistic for 200 examples.
-
-     A number you missed stays where it is, gets diagnosed, and gets a fix
-     attempted. That's where the points are.
-     ───────────────────────────────────────────────────────────────────────── -->
+A missed target is not the same as a broken criterion.
+-->
