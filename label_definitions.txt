@@ -5,6 +5,6 @@
 #
 # Delete the examples below and put yours in.
 
-analysis: makes an argument backed by a specific, checkable fact
-hot_take: a confident claim with no support offered
-reaction: an immediate response to something that just happened
+proof_help: A question whose primary objective is to prove or disprove a mathematical claim, construct a counterexample, or verify or correct the logical validity of a proof.
+computation: A question whose primary objective is to calculate, simplify, evaluate, or solve a specified mathematical expression, equation, or quantity.
+conceptual: A question whose primary objective is to understand the meaning, interpretation, intuition, or motivation behind a mathematical concept rather than obtain a proof or computed result.
