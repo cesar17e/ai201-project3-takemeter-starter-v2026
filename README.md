@@ -42,7 +42,7 @@
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
 
-TakeMeter is a text classifier for questions posted on Mathematics Stack Exchange. From 500 public questions, I selected and labeled 200 examples according to the type of mathematical help the author is requesting: `proof_help`, `computation`, or `conceptual`. I plan to fine-tune `distilbert-base-uncased` on this dataset and evaluate how well it classifies unseen questions. Dataset preparation and human review are recorded below; training has not started.
+TakeMeter is a text classifier for questions posted on Mathematics Stack Exchange. From 500 public questions, I selected and labeled 200 examples according to the type of mathematical help the author is requesting: `proof_help`, `computation`, or `conceptual`. I fine-tuned `distilbert-base-uncased` on this dataset and evaluated it on held-out questions. Dataset preparation, human review, and the initial training run are recorded below.
 
 ---
 
@@ -148,7 +148,7 @@ The original 20 `cold` records remain unchanged. Their original independent anno
 | `conceptual` | 66 | 33% |
 | **Total** | **200** | **100%** |
 
-Every label meets Criterion 4's inclusive 20%–60% range and the assignment's 70% maximum. The dataset remains one unsplit file; the notebook will create the stratified 70/15/15 training, validation, and test split.
+Every label meets Criterion 4's inclusive 20%–60% range and the assignment's 70% maximum. The dataset remains one unsplit file; the notebook created the stratified training, validation, and test split using its default 70/15/15 procedure. The actual split counts are recorded below.
 
 Validation confirmed 200 unique question texts and source IDs, no missing text, labels, or notes, and only the three allowed labels. The CSV loads with pandas, and Section 2's `check_dataset()` function returns no problems or warnings. These checks validate the dataset's structure; they do not resolve the five cold-label flags. Details are in [final_validation.json](data/label_audit/final_validation.json).
 
@@ -184,17 +184,42 @@ Validation confirmed 200 unique question texts and source IDs, no missing text, 
 
 <!-- Your starting model, your settings, and anything you changed and why. -->
 
-**Base model:**
+**Base model:** `distilbert-base-uncased`.
 
 **Settings:** <!-- epochs, learning rate, batch size, seed -->
 
+| Setting | Value |
+|---|---|
+| Epochs | 3 |
+| Learning rate | `2e-5` |
+| Batch size | 16 for training and evaluation |
+| Maximum sequence length | 128 tokens, with truncation and padding |
+| Random seed | 42 |
+| Hardware | Apple Silicon GPU (MPS) |
+| PyTorch | 2.14.1 |
+
+I manually ran Sections 1–5 of [takemeter.ipynb](takemeter.ipynb) in VS Code using the project's virtual environment. The complete run took approximately 58 seconds by observation. The notebook's saved progress display shows `00:20` for the 27 training steps.
+
 **Anything I changed from the defaults, and why:**
+
+I replaced the sample label map with `proof_help`, `computation`, and `conceptual` to match my mathematical assistance taxonomy, and used the 200 questions in root `labels.csv`. I also filled in the notebook's name and email fields. I kept the base model, hyperparameters, seed, splitting procedure, and training code at their original defaults.
 
 **Split sizes:** <!-- train / val / test, and per-label counts in the test
 split. If a label had fewer than about 8 in test, say so — it explains a lot
 of next unit's variance. -->
 
+| Label | Train | Validation | Test |
+|---|---:|---:|---:|
+| `proof_help` | 65 | 15 | 14 |
+| `computation` | 28 | 6 | 6 |
+| `conceptual` | 46 | 10 | 10 |
+| **Total** | **139** | **31** | **30** |
 
+The `computation` category has only six test examples, so its evaluation metrics may be unstable across different splits or random seeds. These are the actual counts printed by the notebook; I did not manually split or change the dataset.
+
+**Initial outcome:** [results.json](results.json) records test accuracy of 0.467 and macro F1 of 0.212. Per-label F1 is 0.636 for `proof_help` and 0.000 for both `computation` and `conceptual`. Its confusion counts confirm that the model predicted `proof_help` for all 30 test examples. Validation loss decreased across the three epochs (1.012956, 0.996696, 0.987934), while validation accuracy stayed at approximately 48.4%.
+
+The completed run saved both `results.json` and the 30 held-out examples in [test_split.csv](test_split.csv). These initial results do not establish that the model meets the acceptance criteria. The targets remain unchanged; detailed diagnosis, baseline comparisons, improvements, and evaluation across three seeds belong to Unit 6.
 
 ---
 
@@ -221,7 +246,9 @@ of next unit's variance. -->
 
 **Pre-labelling disclosure:**
 
-The first 20 annotations were made cold, without AI assistance. The other 180 current examples used AI label suggestions followed by human review, including the six replacements. AI also helped audit the labels, apply approved or delegated decisions programmatically, check the CSV, and draft this documentation. AI did not generate the questions. The `note` column preserves this workflow, including review confirmations; it does not describe the assisted examples as independent cold annotations. No model training or performance evaluation has been run.
+The first 20 annotations were made cold, without AI assistance. The other 180 current examples used AI label suggestions followed by human review, including the six replacements. AI also helped audit the labels, apply approved or delegated decisions programmatically, check the CSV, and draft this documentation. AI did not generate the questions. The `note` column preserves this workflow, including review confirmations; it does not describe the assisted examples as independent cold annotations.
+
+**Milestone 5 assistance:** I ran Sections 1–5 manually in VS Code. After the run, AI helped inspect the saved notebook outputs, verify `results.json` and `test_split.csv` against the dataset, document the actual settings and initial outcome, and review the Git submission requirements. This assistance did not rerun training, modify the training code, change the dataset or acceptance criteria, or execute Sections 6–7.
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
