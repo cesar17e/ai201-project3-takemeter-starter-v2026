@@ -198,7 +198,6 @@ Validation confirmed 200 unique question texts and source IDs, no missing text, 
 | Hardware | Apple Silicon GPU (MPS) |
 | PyTorch | 2.14.1 |
 
-I manually ran Sections 1–5 of [takemeter.ipynb](takemeter.ipynb) in VS Code using the project's virtual environment. The complete run took approximately 58 seconds by observation. The notebook's saved progress display shows `00:20` for the 27 training steps.
 
 **Anything I changed from the defaults, and why:**
 
@@ -244,11 +243,6 @@ The completed run saved both `results.json` and the 30 held-out examples in [tes
 - *What came back:* Six unused questions from the original export, with source IDs, URLs, and suggested `computation` labels.
 - *What I changed:* The six out-of-scope assisted records were replaced programmatically. I personally reviewed and confirmed all six replacement labels. The dataset stayed at 200 questions, and the replacement notes retain their AI-assisted provenance.
 
-**Pre-labelling disclosure:**
-
-The first 20 annotations were made cold, without AI assistance. The other 180 current examples used AI label suggestions followed by human review, including the six replacements. AI also helped audit the labels, apply approved or delegated decisions programmatically, check the CSV, and draft this documentation. AI did not generate the questions. The `note` column preserves this workflow, including review confirmations; it does not describe the assisted examples as independent cold annotations.
-
-**Milestone 5 assistance:** I ran Sections 1–5 manually in VS Code. After the run, AI helped inspect the saved notebook outputs, verify `results.json` and `test_split.csv` against the dataset, document the actual settings and initial outcome, and review the Git submission requirements. This assistance did not rerun training, modify the training code, change the dataset or acceptance criteria, or execute Sections 6–7.
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
