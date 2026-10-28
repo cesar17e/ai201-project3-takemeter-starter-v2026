@@ -1,0 +1,184 @@
+{
+  "model": "facebook/bart-large-mnli",
+  "n": 30,
+  "seed": 42,
+  "held_out": true,
+  "used_definitions": true,
+  "scores": {
+    "n": 30,
+    "accuracy": 0.5333333333333333,
+    "f1_macro": 0.5216874628639334,
+    "per_label": {
+      "computation": {
+        "precision": 0.375,
+        "recall": 1.0,
+        "f1": 0.5454545454545454,
+        "support": 6
+      },
+      "conceptual": {
+        "precision": 0.6363636363636364,
+        "recall": 0.7,
+        "f1": 0.6666666666666666,
+        "support": 10
+      },
+      "proof_help": {
+        "precision": 1.0,
+        "recall": 0.21428571428571427,
+        "f1": 0.35294117647058826,
+        "support": 14
+      }
+    }
+  },
+  "predictions": [
+    {
+      "text": "Title: Infinitely many coin flips (or die rolls, etc.)\n\nSuppose that we have a sample space of infinitely many fair coin flips and the event\n\n$$A_n = \\{\\text{The first $n$ flips are heads}\\}.$$\n\nThis event has probability\n\n$$P\\{A_n\\} = 2^{-n}.$$\n\nSimilarly, if we have an event\n\n$$B_n = \\{\\text{The first tails occurs on the $n$th flip}\\},$$\n\nthe probability is also\n\n$$P\\{B_n\\} = 2^{-n}.$$\n\nThe part that confuses me (and for which I still haven't found a good answer) is why we're allowed to disregard the flips that occur after the $n$th flip (ie. no matter what we observe afterward, the probability of having the first tails occur on the $n$th flip is $2^{-n}$).\n\nThere are several scenarios where this issue is relevant beyond coin flips (observing the first occurrence of a particular number in a die roll, the first occurrence of a particular digit in a real number, etc.) but the intuition eludes me. Would anyone like to explain?",
+      "gold": "conceptual",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: Any modular obstruction to divisibility by $1321$ of decimal concatenation of $2^n-1$ with $2^{n-1}-1$?\n\nConsider C the concatenation in base ten of $2^n-1$ with $2^{n-1}-1$.\nUsing a program in python I checked up to $n=8000000$ that the concatenation C is never divisible by the prime $1321$. Is there a proof that the concatenation can not be divisible by $1321$ for all n? Is there a modular obstruction? I am astonished. Is it due to the particualar effect of irrationality of $\\log_{10}{2}$?",
+      "gold": "proof_help",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: The most efficient way to compute every natural number that can be written as the sum of two squares up to some bound\n\nWhat is the most efficient way to compute every natural number that can be written as the sum of two squares up to some bound $N$?\n\nThe naive approach would consist of iterating $x,y$ over $(0, 1, \\dots, \\sqrt N)$ and, for each pair, adding $x^2+y^2$ to our list. This algorithm executes in $O(N)$ time, which is not too bad. However, it can be shown the numbers we wish to compute amount to approximately $\\dfrac{bN}{\\sqrt{\\log N}}$ of the elements in $\\{0, 1, \\dots, N\\}$, where $b\\approx 0.76422\\dots$ denotes the Landau\u2013Ramanujan Constant. Thus, if we somehow avoid repetitions, one would accomplish a complexity of $O\\left(\\dfrac{N}{\\sqrt{\\log N}}\\right)$. Is this possible?\n\nIt might be helpful to consider the sum of two squares theorem, which states a natural number can be written as the sum of two squares if, and only if, its prime factorization have no prime factor that is $3\\pmod 4$ raised to an odd power. This could be used to compute such numbers with no repetition, but this would also involve computing the prime numbers up to $N$, which is itself less efficient than $O(N)$.",
+      "gold": "computation",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Show $\\frac{x^2-3}{3y^2+5}\\notin \\Bbb{Z}$ for any integers $x,y$\n\nI would like to solve the following problem from elementary number theory:\n\nShow $\\frac{x^2-3}{3y^2+5}\\notin \\Bbb{Z}$ for any integers $x,y$\n\nFor sake of contradiction, assume $\\frac{x^2-3}{3y^2+5}=k$ for some $k \\in\\Bbb{Z}$\n$$x^2-3ky^2=5k+3$$\n\nWLOG, assume $x,y\\geq 0$\nAfter doing some cases for $x=0,1$ we may as well assume $k$ is positive.\n$D=12k>0$ Now we have only studied binary quadratic forms where $D<0$ so I don't think I'll understand this approach.\n\nOne approach on a similar problem was to understand prime factorisation of denominator and somehow arrive at contradiction with the numerator. I tried this approach with primes like 2,3,5 and also tried it mod 4,8.\nBut all these become complicated.\nBesides this I tried replacing $x$ with $x'+2$ etc and but I think I'll have to argue similarly.",
+      "gold": "proof_help",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Proving geometrically that $ \\frac{\\cos(A+B)}{\\cos(A-B)}=\\frac{\\sin(C+D)}{\\sin(C-D)}$ implies $\\tan A\\tan B\\tan C+\\tan D=0$\n\nI recently came across the following trigonometric identity.\n\nGiven:\n$$ \\frac{\\cos(A+B)}{\\cos(A-B)} = \\frac{\\sin(C+D)}{\\sin(C-D)} $$\n\nProve that:\n$$ \\tan A \\tan B \\tan C + \\tan D = 0 $$\n\nAlgebraic Context:\nProving this algebraically is completely trivial. By simply applying Componendo and Dividendo on both sides and using standard sum-to-product formulas, the terms shrink immediately, and dividing by $\\cos A \\cos B \\cos C \\cos D$ yields the result in about three steps.\n\nMy Question:\nIs it mathematically possible to prove this purely via Euclidean Geometry (using visual geometric constructions, circles, triangles, projections, etc.) without relying on algebraic expansions or cross-multiplication?\n\nWe know that 2-variable identities like $\\cos(A+B)$ or $\\sin(A-B)$ have very elegant geometric proofs (often using stacked right triangles on a unit circle or Ptolemy's Theorem). However, since this particular equation involves 4 independent variables $A, B, C, D$, creating a single 2D geometric figure seems practically impossible without drawing a highly convoluted network of overlapping cyclic quadrilaterals.\n\nHas anyone ever seen, or can anyone construct, a purely geometric/visual proof for this specific relation? Or does the introduction of 4 independent angles mathematically break the limit of reasonable 2D Euclidean representations?",
+      "gold": "proof_help",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: How do you explain why the leading coefficient of a quadratic models HALF the acceleration, without referring to calculus?\n\nA quadratic function $f(t) = at^2+bt+c$ can be used to model the height of some projectile subject only to constant vertical acceleration (e.g. gravity) after some time $t$ where $c$ is the initial height, $b$ is the initial vertical velocity, and $a$ is half of the constant acceleration. But why half? How do you explain to someone unfamiliar with calculus why that number ought to be half the acceleration? (I understand why it must be half just because of the mechanics of taking derivatives, but only from that perspective).",
+      "gold": "conceptual",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: Smoothness in $t$ for parabolic equation with $t$-independent coefficients\n\nLet $B=B_1=B_1^n(0)$ and $$u(x,t)\\in L^2\\left([0,T],H^1(B)\\right)\\cap H^{\\frac12}\\left([0,T],L^2(B)\\right)$$ be the weak solution to the parabolic equation\n$$\\left\\{\n\\begin{array} \n & \\frac{\\partial u}{\\partial t}-\\nabla\\cdot(A(x)\\nabla u)=0,\\\\\n u(x,0)=f(x)\\in L^2(B),\\\\ \nu(x,t)|_{\\partial B\\times [0,T]}=0\n\\end{array} \\right.$$\non $B\\times [0,T]$, where the coefficient matrix $A(x)$ is real and only depending on $x$ (i.e. $t$-independent) satisfying the uniform elliptic condition.\n\nThen the question is, is it true that $u\\in H^1\\left([\\varepsilon,T],L^2(B)\\right)$ for every $\\varepsilon$ sufficiently small?\n\nIf the coefficient $A$ is Lipschitz in $x$, the conclusion can be verified easily. For general $A(x)$ possibly discontinuous at some points or even everywhere, analogous results for elliptic PDEs can be obtained via the finite difference method for elliptic PDEs(see Gilbarg-Trudinger). However for parabolic PDEs the finite difference method is hard to be applied.",
+      "gold": "proof_help",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Help understanding Division algorithm proof\n\nIn the existence proof of the division algorithm you're trying to show r is less than b.You use Proof by contradiction which involves a-(q+1)b but I don't see why a-(q+1)b should be member of the set. We only know that it has a least element it doesn't tell us any other thing that might be in there. The set could contain ONLY the least element. Conversely if one accepts that all non negative integers of that form belong to S then one need not have proved it was non empty. So why did we.",
+      "gold": "proof_help",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: Finding the largest delta in the Epsilon delta proof of $\\lim_{(x,y)\\to(0,0)} \\frac{xy}{\\sqrt{x^2+y^2}}$\n\nMy question can perhaps be called an extension to the one asked here : $\\lim_{(x,y)\\to(0,0)} \\frac{xy}{\\sqrt{x^2+y^2}}$.\n\nIn our class, when we were taught $\u03b5-\u03b4$ proofs, this question was present in one of the slides. As we can see from the highest voted answer above, the greatest $\u03b4$ possible is $\u03b5$. The inequality used is : $(x < \\sqrt{x^2 + y^2})$ and similary for $y$.\n\nHowever the slide uses: a different inequality I do know how we arrived at that, but I am confused -\n\nwhich is the best answer ? Should $\u03b4 < \u03b5/2$ or $\u03b4 < \u03b5$ ?\n\n(P.S. : There might be a mistake in the slide - \"choosing \u03b4 < \u03b5/2\". Even if it is \u03b4 < 2\u03b5, my question still holds - which is the best delta ?)",
+      "gold": "proof_help",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Proving inequality $\\sum_{i=1}^{n} \\frac{x_i}{\\sqrt{(n-1)x_i^2 + (n+1)(\\sum_{j \\neq i} x_j)^2}} \\ge \\frac{1}{\\sqrt{n-1}}$\n\nFor $n \\ge 2$, let $x_1, x_2, \\dots, x_n$ be positive real numbers. I am trying to prove the following inequality:\n\n$$\\sum_{i=1}^{n} \\frac{x_i}{\\sqrt{(n-1)x_i^2 + (n+1)(\\sum_{j \\neq i} x_j)^2}} \\ge \\frac{1}{\\sqrt{n-1}}$$\n\nMy attempt:\n\n\u2022 The equality holds when $x_1 = x_2 = \\dots = x_n$, which simplifies both sides to $\\frac{1}{\\sqrt{n-1}}$.\n\n\u2022 I tried applying the Cauchy-Schwarz inequality to clear the square roots in the denominators, but the direction of the inequality reversed.\n\n\u2022 I also considered utilizing Holder's inequality or flattening the expression by assuming $\\sum x_i^2 = 1$, but the cross-terms $\\sum_{j \\neq i} x_j^2$ (which is $1 - x_i^2$) still complicate the algebra.\n\nCould anyone provide a hint or a structural way to approach this problem?\n\nAny help or reference would be greatly appreciated!",
+      "gold": "proof_help",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Integral with Bessel function and non-integer power\n\nI am wondering if anyone might know a way of calculating this thing:\n\n$$\\int_0^{\\infty} \\frac{J_1(x)}{x^{\\alpha}(x^2+a^2)^{1/2}}\\mathrm dx$$\n\nwhere $J_1(x)$ is the Bessel function, $0<\\alpha<1$ and $a\\in\\mathbb R$. Matlab can't find a closed form, and I don't have any real insight, so any input at all would be appreciated in case this is known.\n\nMathematica can find the following answer in terms of hypergeometric function:\n\n$$\\frac{\n\\Gamma\\left(\\frac{1}{2}-\\frac{\\alpha}{2}\\right)\n\\,{}_1F_2\\left(\n\\frac{1}{2};\n\\frac{\\alpha}{2}+\\frac{1}{2},\n\\frac{\\alpha}{2}+\\frac{3}{2};\n\\frac{1}{4}\n\\right)\n}{\n2^{\\alpha+1}\n\\Gamma\\left(\\frac{\\alpha}{2}+\\frac{3}{2}\\right)\n}\n+\n\\frac{\n\\Gamma\\left(1-\\frac{\\alpha}{2}\\right)\n\\Gamma\\left(\\frac{\\alpha}{2}-\\frac{1}{2}\\right)\n\\,{}_1F_2\\left(\n1-\\frac{\\alpha}{2};\n2,\n\\frac{3}{2}-\\frac{\\alpha}{2};\n\\frac{1}{4}\n\\right)\n}{\n4\\sqrt{\\pi}\n}$$\n\nbut this is not particularly useful, as I am rather hoping for an expression in terms of more elementary functions. Any input appreciated.",
+      "gold": "computation",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: When can one say Theorem A implies Theorem B?\n\nI tried to solve the following exercise:\n\n\"Prove that the K\u00f6nig-Egervary Theorem for bipartite graphs implies Hall's Marriage Theorem.\"\n\nNow, Hall's Theorem is an equivalence:\n$$\\exists \\text{ a matching saturating the partite set } X \\iff \\forall S \\subseteq X: |S| \\leq |N(S)|.$$\n\nProving \"$\\implies$\" is straightforward and does not require the K\u00f6nig\u2013Egerv\u00e1ry Theorem. The converse is substantially more difficult, and the K\u00f6nig\u2013Egerv\u00e1ry Theorem can be used to prove it.\n\nIt might sound nitpicky, but can one still say that Theorem A implies Theorem B if only one direction of an equivalence, albeit the harder one, follows from Theorem A? Is it standard practice to say this only when one implication is trivial (like it is the case here)?",
+      "gold": "conceptual",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: What is wrong with this proof of commutativity of vector addition?\n\nI am studying vector spaces and came across the following problem:\n\nWhat is wrong with the following proof of commutativity of addition using other axioms of a vector space?\n\n$x+x+y+y=2x+2y=2(x+y)=x+y+x+y$.\n\nCancelling $x$ from left and $y$ from right, we have\n\n$x+y=y+x$.\n\nI tried to understand where the proof goes wrong. My first thought was that\nthe problem might be with taking $2=1+1$, but I am not sure, since $2$\ncan be written as $1+1$ in the scalar field.\n\nCould someone explain precisely which step in this proof is invalid and\nwhy?",
+      "gold": "proof_help",
+      "predicted": "proof_help"
+    },
+    {
+      "text": "Title: Computationally efficient algorithm for multivector inverses.\n\nI am currently writing a code library for geometric algebra, just as a side project, as a way of better understanding both programming an geometric algebra. I now face the hurdle of finding the inverse of multivectors. Currently I am just working with multivectors with signature $(d,0)$. For $d\\le5$, the paper https://doi.org/10.1016/j.amc.2017.05.027 provides some algorithms for this, however for $d>5$, everything I can find seems to point to converting multivectors to matrices and inverting those. However, it seems that the matrix representation of a multivector is $2^{d}\\times2^{d}$. Given that matrix inversion is $M^{-1}\\in\\mathcal{O}\\left(n^{\\log_{2}(7)}\\right)$, it directly implies that $v^{-1}\\in\\mathcal{O}\\left(7^{n}\\right)$, which is ludicrously slow for something as used as calculating inverses.\n\nI am wondering if there is some other algorithm for finding multivector inverses that works better for computers, I find it hard to believe that $\\mathcal{O}\\left(7^{n}\\right)$ is the best possible method. I know the aforementioned paper lists a few isomorphisms, however as far as I can tell they either relate clifford algebras different signatures, or relate clifford algebras to matrix algebras, neither of which seems to be particularly helpful for algorithms that computers can calculate sufficiently quickly.",
+      "gold": "computation",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: What is the topological argument principle and how does it relate to proper maps between topological discs?\n\nIn Kenneth Stephenson's 2005 book Introduction to Circle Packing, page 68, he uses a topological line of reasoning in the proof that there is a unique (up to conformal automorphisms) univalent circle packing $P$ in the hyperbolic geometry $\\mathbb{D}$ such that each boundary circle in $P$ is a horocycle. I quote:\n\n$K$ is a topological disc, and on any sequence of points $\\{p_j\\}$ that converges to its boundary, $\\partial K$, the image sequence $\\{\\phi(p_j)\\}$ converges to $\\partial \\mathbb{D}$. Thus $\\phi: K\\to \\bar{\\mathbb{D}}$ is what is known as a proper map. Putting its properties together, $\\phi$ is a proper, continuous, and locally one-to-one map between topological discs. By the topological argument principle, $\\phi$ is globally one-to-one.\n\nIs there any heuristic that could help me see why global injectivity follows from the conditions on $\\phi$? Or is there a reference that explains the \"topological version\" of the complex-analytic argument principle?",
+      "gold": "conceptual",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: how to prove $p_0/p_1$ is conditional expectation of $dq/dp$\n\nConsider the SDE\n\n\\begin{cases}\ndX_t^1=u(X_t^1,X_t^2)\\,dt+dB_t,\\\\[2mm]\ndX_t^2=X_t^1\\,dt,\\\\[2mm]\n(X_0^1,X_0^2)=x\\in\\mathbb{R}^2,\n\\end{cases}\n\nwhere $u:\\mathbb R^2\\to\\mathbb R$ is bounded. Suppose that, under $\\mathbb P$, the law of $X_t=(X_t^1,X_t^2)$ has density $p_1(t,x,z)$.\n\nDefine\n\n$$\nM_t=\\exp\\left(-\\int_0^t u(X_s)\\,dB_s-\\frac12\\int_0^t |u(X_s)|^2\\,ds\\right)\n$$\n\nand define $\\mathbb Q$ on $\\mathcal F_t$ by $d\\mathbb Q/d\\mathbb P=M_t$. Since $u$ is bounded, Novikov's condition holds. Hence, by Girsanov's theorem,\n\n$$\n\\overline B_t=B_t+\\int_0^t u(X_s)\\,ds\n$$\n\nis a Brownian motion under $\\mathbb Q$. Therefore, under $\\mathbb Q$, the process satisfies $$dX_t^1=d\\overline B_t$$ and $$dX_t^2=X_t^1,dt$$, so the law of $X_t$ has the Kolmogorov density $p_0(t,x,z)$.\n\nmy question is: How can I prove rigorously that\n$$\n\\mathbb E_{\\mathbb P}\\left[M_t\\mid X_t=z\\right]=\\frac{p_0(t,x,z)}{p_1(t,x,z)}\n$$\nfor $p_1(t,x,z),dz$-almost every $z$?\nIn particular, how should the ratio be defined on the set where $p_1(t,x,z)=0$? I am not yet sure why $p_0(t,x,z)$ must also vanish almost everywhere on that set.",
+      "gold": "proof_help",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: For a sphere, the ratio of the distances of its points from two fixed points is constant\n\nFor a sphere, the ratio of the distances of its points from two fixed points is constant\n\nThis statement is included in property #1 of a sphere on page of 215 of Hilberts \"Geometry and the Imagination\". He said that this result is easily achievable through analytic methods. I haven't been able to prove it.\n\nThe two fixed points have to be themselves on there sphere, right? If somebody could show me a counterexample showing that this what the statement means, that would be great.\n\nAnyway, my attempt to prove this was to put a sphere centered at the origin of radius R, let $m(a,b,c)$ be an arbitrary point on the sphere and let $f_i(x_i,y_i,z_i)$ be two fixed points for $i=1,2$. Let $d_i$ be the distance from point $m$ to point $f_i$ for $i=1,2$\n\nI then looked at the ratio $\\frac{d_1}{d_2}$, plugging in the standard pythagorean euclidean distance formula for $d_1,d_2$. I was not able to algebraically reduce this expression to a constant. Can somebody show me that this is indeed possible? It must be...\n\nI'd also love to see a more elegant way of proving this result. Thanks",
+      "gold": "proof_help",
+      "predicted": "proof_help"
+    },
+    {
+      "text": "Title: About the vanishing scheme of the quasi-coherent ideal sheaf generated by a power of a maximal ideal ( $X_n = V( \\mathfrak{m}^{n+1} \\mathcal{O}_X)$).\n\nLet $f: X \\to S:=\\mathrm{Spec}R$  be a (proper) morphism of schemes with $S$ a spectrum of a local noetherian ring $R$ with the maximal ideal $\\mathfrak{m}$.\n\nThen,\n\nQ.1. What's meaning of symbol $\\mathfrak{m}^{n+1} \\mathcal{O}_X$, which can likely be viewed as a quasi-coherent ideal sheaf of $\\mathcal{O}_X$?\n\nQ.2. $X \\times_S \\mathrm{Spec}(R/\\mathfrak{m}^{n+1}) \\cong X_n :=V ( \\mathfrak{m}^{n+1} \\mathcal{O}_X) $, where $X_n$ is the vanishing closed scheme of  $\\mathfrak{m}^{n+1} \\mathcal{O}_X$ ?\n\nQ.3. As topological spaces, for each $n \\ge 1$, $X_n \\cong X_0 := V(\\mathfrak{m} \\mathcal{O}_X)$ ? Note that we know that for each ideal $ I $ of a ring $A$, for each $ n \\ge 1$, $V(I) = V (\\sqrt{I}) = V ( \\sqrt{I^n}) = V(I^n).$\n\nCan anyone help? :)",
+      "gold": "proof_help",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: How to calculate a type of alternating sums\n\nI recently was trying to evaluate the sum $$\n\\sum_{n=1}^{\\infty} (-1)^{n+1}\n\\frac{9n^2-12n+2}{(3n)(3n-1)(3n-2)}.\n$$\nI re wrote it via partial fraction decomposition down to $$\\frac{\\ln(2)}{3}+\n\\sum_{n=1}^{\\infty} (-1)^{n+1}\n\\left(\n\\frac{1}{3n-1}-\\frac{1}{3n-2}\n\\right).\n$$\nThis makes the question into the difference between alternating sums of the reciprocals of integer coefficient linear functions with the same slope, which I feel like I see over and over again. My question is, for arbitrary integer $k,a, \\text{and, } b$ how would one approach solving the sum$$\\sum_{n=1}^{\\infty} (-1)^{n+1}\n\\left(\n\\frac{1}{kn-a}-\\frac{1}{kn-b}\n\\right)?\n$$",
+      "gold": "computation",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Constrained optimisation in half space by log mapping\n\nI have a non-linear optimisation problem with very expensive function evaluations. Namely, for some admissible set $\\mathcal{A}:=\\{x\\in\\mathbb{R}^N|\\ i=1,\\dots,N;\\ x>0 \\text{ component-wise}  \\}$ and  $f:\\mathcal{A}\\to \\mathbb{R}$ I seek\n$$\\min_{x\\in\\mathcal{A}} f(x).$$\n\nI am sure that the minimum is not on the boundary of $\\mathcal{A}$, because those values make no sense in the context of the problem.\n\nIs there anything wrong simply mapping the admissible set to $\\mathbb{R}^N$ via a log function and optimising there? If I define $g(x):=\\log x$ then $\\mathcal{A}^{\\text{log}}:=\\{g(x)|\\ x\\in\\mathbb{A}\\ \\} $, again component-wise log, then I don't have to enforce any active sets or penalties at all. I can just solve:\n\n$$\\min_{y\\in \\mathcal{A}^{\\text{log}}} f \\circ g^{-1} (y)$$\n\nwith gradients $\\nabla(f\\circ g^{-1})(y)=\\nabla f\\cdot(\\nabla (g^{-1})(y))$.\n\nI don't see this method proposed in any text books, so I guess there must be a drawback I am missing. The upside is not needing to implement constraint processing at all.",
+      "gold": "conceptual",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Showing that gluing lines via $s \\mapsto 1/t$ gives the projective line $\\mathbb P^1_k$\n\nConsider the schemes $X_1 = \\text{Spec }k[t]$ and $X_2 = \\text{Spec }k[s]$, and the open subschemes $U_1 = D(t)$ and $U_2 = D(s)$. The ring isomorphism $k[s, 1/s] \\to k[t, 1/t]$ given by $s \\mapsto 1/t$ induces a scheme isomorphism $f \\colon U_1 \\to U_2$. Let\n$$X = \\frac{X_1 \\sqcup X_2}{f}$$\nbe the scheme obtained by gluing $X_1$ and $X_2$ along $U_1 \\cong U_2$.\n\nShow that $X$ is isomorphic to $\\mathbb P^1_k$.\n\nI solved the case for the isomorphism $s \\mapsto t$, which gives the line with double origin. But I'm very confused with the nontrivial isomorphism $s \\mapsto 1/t$. What I know: the topology on the projective space is defined by the closed sets\n$$V_+(I) = \\{ P \\in \\text{Proj } k[x_0, x_1] : P \\supset I \\}.$$\nAnd a subset $U \\subset X$ is open iff $\\pi^{-1}U \\cap X_1$ and $\\pi^{-1}U \\cap X_2$ are open. Now, I have no idea how to define the homeomorphism.\n\nI appreciate any help :)",
+      "gold": "proof_help",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: Notation of frame bundle coordinates.\n\nConsider the frame bundle $F(X)$ of all frames over a manifold $X$. Let $(x,\\rho_x)$ be an element of this bundle, where $\\rho_x$ is a frame at the point x of the manifold. I have seen it mentioned that an element of $F(X)$ can be written in local coordinates as $(x^i,a^j_k)$. I am confused about what these indices would represent, specifically for the second component which if I correctly understand is the coordinate of the frame $\\rho_x$. Why does $a^j_k$ have two indices, and what do they represent? Since a frame is basically an ordered basis, wouldn't we just need one index for one of its components? Wouldn't also this index have to also be $i$ since the basis corresponds to the point $x^i$?\n\nAs an extra, my textbook also says that the natural basis for the tangent space of the frame bundle is $(\\epsilon_a)=(\\epsilon_i,\\epsilon_k^j)$. My confusion here is similar, especially for the use of $\\epsilon$ which from what I understand is used for dual vectors.\n\nThis is probably obvious but I am still a beginner.",
+      "gold": "conceptual",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: A simple sum of powers conjecture $\\sum_{i=1}^p a_i^p = u$\n\nConsider the following identities\n\n$$1 + 6^3 + 8^3 = 9^3$$\n\n$$(-12)^3 + 9^3 + 10^3 = -1728 + 729 + 1000 = 1$$\n\n$$27^5 + 84^5 + 110^5 + 133^5 = 144^5$$\n\n$$1 + 2816^7 + 1348^7 + 1146^7 = 2787^7 + 1951^7 + 1031^7 + 130^7$$\n\nand the general equation\n\n$$\\sum_{i=1}^p a_i^p = u$$\n\nwhere $|a_i|>1$ are distinct integers, where $p$ is an odd prime and $u^3 = u$ or equivalent $u={-1,0,1}$.\n\nThis is of course a generalization of the known conjecture of the Lander-Parkin-Selfridge conjecture\n\nThe conjecture is:\n\nThis Diophantine equation is solvable for every odd prime $p$.\n\nThis seems easier and more elegant than the older conjectures.\n\nIt also addresses the near misses.\n\nAre counterexamples known for nonzero $u$ ?\nOr can we disprove this conjecture for nonzero $u$ ?\n\nI was unable to find an argument against it and convinced it is true.\n\nNotice that flipping the sign of $u$ is the same equation essentially since it corresponds to flipping the signs of the $a_i$.\n\nSo you can make it shorter by stating\n\n$$\\sum_{i=1}^p a_i^p = u$$\n\nwhere $|a_i|>1$ are distinct integers, where $p$ is an odd prime and $u^2 = u$ or equivalent $u={0,1}$.\n\nI must give credit to my mentor and to user Tito Piezas.\n\nEdit : added the well known taxi cab number as an example, as commented by user142857 and loved by my mentor and many.",
+      "gold": "proof_help",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Motivation behind defining Convex hull for polynomial Convexity\n\nI was trying to prove that certain domains in $\\mathbb{C}^3$ (the tetrablock and the pentablock) are polynomially convex. A compact set $K$ is called polynomially convex if it coincides with its polynomial hull $\\widetilde{K}$, where\n\n$$\\widetilde{K} := \\left\\{ z \\in \\mathbb{C}^3 : |f(z)| \\leq \\max_{x \\in K} |f(x)| \\text{ for every polynomial } f \\right\\}$$\n\nI have not been able to understand the motivation behind this definition. What is actually going on? It is clear that $K \\subseteq \\widetilde{K}$, but why do we collect all the points satisfying these inequalities?\n\nP.S.\n\nOf course, we say that a domain is polynomially convex if every compact subset contained in it is polynomially convex",
+      "gold": "conceptual",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: Solving linearly coupled ODEs\n\nI am interested in solving an eigenvalue problem of the form\n$$\n-\\boldsymbol{u}''(x)+P(x)\\boldsymbol{u}'(x)+Q(x)\\boldsymbol{u}(x)=a^2F^2(x)\\boldsymbol{u}(x)\n\\label{1}\\tag{1} \n$$\nHere $P(x),Q(x),F^2(x)$ are matrix-valued coefficient functions, $\\boldsymbol{u}(x)\\in\\mathbb{C}^n$ and $a,x \\in \\mathbb{C}$\n\nI have found a web page where the process of solving such ODEs is given briefly (see 1). Unfortunately, this page does not have any references to literature. Does anyone know of a book or an article, where coupled ODEs given by $\\eqref{1}$ are considered in more detail? I am particularly interested in decoupling such equations into independent scalar Schr\u00f6dinger equations as it was done in 1.\n\nAnd another question: Can $\\eqref{1}$ be treated using methods similar to the ones given in 1 when $x \\in \\mathbb{C}^n$?",
+      "gold": "conceptual",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: Proof by contradiction and logical value\n\nI know how to proceed with a proof by contradiction for $A \\implies B$:\nOne assumes that $A \\land \\neg B$ is true and logically deduces a contradiction $\\perp$.\n\nMy question is: is the contradiction actually false? I mean, does \"logically deducing a contradiction\" imply that the contradiction is true, provided that our hypothesis is true? After all, we know that we cannot deduce false statements from true ones (When deriving a contradiction, I am not deriving a false WFF, because my steps are valid).\n\nTherefore, $A \\land \\neg B$ must be false, which implies that $A \\implies B$ is true.\n\nIn other words, is there a distinction between the logical value of a contradiction when it is contingent upon a true hypothesis and when it is evaluated in isolation?\n\n[If the question is trivial and/or poorly phrased, please disregard it, and I will delete the post.]",
+      "gold": "conceptual",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: Is there any other way to compute $ \\int_{-\\infty}^{+\\infty} \\frac{\\sin (x+1)}{x^3+x^2+x+1} d x?$\n\nNoticing that the integral can be expressed as a double integral, we have\n\n$$\\displaystyle \\begin{aligned} \\int_{-\\infty}^{+\\infty} \\frac{\\sin (x+1)}{x^3+x^2+x+1} d x &=\\int_{-\\infty}^{+\\infty} \\frac{\\sin (x+1)}{(x+1)\\left(x^2+1\\right)} d x \\\\ &=\\int_{-\\infty}^{+\\infty} \\frac{1}{x^2+1} \\int_0^1 \\cos ((x+1) y) d y d x \\\\ &=\\int_0^1 \\int_{-\\infty}^{+\\infty} \\frac{\\cos ((x+1) y)}{x^2+1} d x d y \\\\ &=\\int_0^1 \\int_{-\\infty}^{\\infty} \\frac{\\cos (x y) \\cos y-\\sin (x y) \\sin y}{x^2+1} d x d y \\\\ & =\\int_0^1\\left(\\cos y \\int_{-\\infty}^{\\infty} \\frac{\\cos (x y)}{x^2+1} d x-\\sin y \\underbrace{ \\int_{-\\infty}^{\\infty} \\frac{\\sin (x y)}{x^2+1} d x}_{=0} \\right) d y \\end{aligned}\\tag*{} $$\n\nFor the remaining integral, we use contour integration along anti-clockwise direction of the path $$\\gamma=\\gamma_{1} \\cup \\gamma_{2} \\textrm{ where }  \\gamma_{1}(t)=t+i 0(-R \\leq t \\leq R)  \\textrm{ and } \\gamma_{2}(t)=R e^{i t}  (0<t<\\pi)$$\nLet $R\\rightarrow \\infty$, then\n$$\\displaystyle \\begin{aligned} \\int_{-\\infty}^{\\infty}  \\frac{\\cos (x y)}{x^2+1} d x=&\\Re \\int_{-\\infty}^{\\infty} \\frac{e^{-x y i}}{x^2+1} d x \\\\ = & \\Re \\oint_\\gamma \\frac{e^{-z y i}}{z^2+1} d z\\\\=&\\Re\\left[2 \\pi i\\left(\\frac{e^{-y}}{2 i}\\right)\\right] \\\\ = & \\pi e^{-y}\\end{aligned}\\tag*{} $$\n\nPlugging back with IBP yields\n$$\\displaystyle \\boxed{ \\int_{-\\infty}^{+\\infty} \\frac{\\sin (x+1)}{x^3+x^2+x+1} d x=\\int_0^1 \\pi e^{-y} \\cos y d y=\\frac{\\pi}{2 e}(e+\\sin 1-\\cos 1)}\\tag*{} $$\n\nIs there any other way to compute $ \\int_{-\\infty}^{+\\infty} \\frac{\\sin (x+1)}{x^3+x^2+x+1} d x?$",
+      "gold": "computation",
+      "predicted": "computation"
+    },
+    {
+      "text": "Title: There do not exist three integers $n$, $n+2$ and $n+4$, all of which are primes\n\nI am taking a proofs course and have come across the following statement in my textbook:\n\nThere do not exist three integers $n$, $n+2$ and $n+4$, all of which are primes.\n\nProof:\n\nAssume, to the contrary, that there exist three integers $n$, $n+2$ and $n+4$, all of which are primes. We can write $n$ as $3q$, $3q + 1$ or $3q + 2$, where $q\\in\\mathbb{Z}$. We\nconsider these three cases.\n\nCase 1. $n = 3q$. Then $3 | n$ and so n is not prime. This is a contradiction.\n\nCase 2. $n = 3q + 1$. Then $n + 2 = 3q + 3 = 3(q + 1)$. Since $q + 1$ is an integer,\n$3 | (n + 2)$ and so $n + 2$ is not prime. Again, we have a contradiction.\n\nCase 3. $n = 3q + 2$. Hence, we have $n + 4 = 3q + 6 = 3(q + 2)$. Since $q + 2$ is an\ninteger, $3 | (n + 4)$ and so $n + 4$ is not prime. This produces a contradiction.\n\nBut it\u2019s obvious that when $n=3$ the cases hold since the sequence 3, 5 and 7 are prime. There is no restriction on $q$, so $q$ could be 0, 2 and 1 for $3q$, $3q+1$, $3q+2$ respectively. Was this an oversight by the author or am I mistaken?\n\nTextbook: Mathematical Proofs: A Transition to Advanced Mathematics; Fourth Edition (pg. 324)",
+      "gold": "proof_help",
+      "predicted": "proof_help"
+    },
+    {
+      "text": "Title: Why not think of lattices as $\\mathbb Z^n$?\n\nI have a very naive question. I am reading Cox, Little and Schenck, and on page 13 they define a lattice to be a free abelian group of finite rank, which is isomorphic to $\\mathbb{Z}^n$ for some integer $n$. My question is, if a lattice is isomorphic to $\\mathbb{Z}^n$ why not just use $\\mathbb{Z}^n$? In what ways are lattices (in this context) different from $\\mathbb{Z}^n$?",
+      "gold": "conceptual",
+      "predicted": "conceptual"
+    },
+    {
+      "text": "Title: Manipulating equation to evaluate a sum\n\nLet $T_n=\\frac{1}{2} n (n+1)$ be the nth triangular number, $Q_n=n^2$ the nth square number and $H_n=n(2n-1)$ the nth hexagonal number. Manipulate the sum $H_n=1+5+9+13+\\dots+(4n-7)+(4n-3)$ term by term to show that it can be written as $2T_n+Q_{n-1}-1$.\n\nI understand what the question is asking but I don't really understand how to manipulate. I just don't know how to do it if the number of terms changes with hexagonal numbers. Also, though I have learnt more advanced maths, I am still in 7th grade so I would appreciate it if you provided a simplified explanation.",
+      "gold": "computation",
+      "predicted": "computation"
+    }
+  ]
+}

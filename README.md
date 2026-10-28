@@ -221,6 +221,8 @@ The completed run saved both `results.json` and the 30 held-out examples in [tes
 - *What came back:* Six unused questions from the original export, with source IDs, URLs, and suggested `computation` labels.
 - *What I changed:* The six out-of-scope assisted records were replaced programmatically. I personally reviewed and confirmed all six replacement labels. The dataset stayed at 200 questions, and the replacement notes retain their AI-assisted provenance.
 
+**Unit 6, Milestone 1 assistance:** I ran the baseline myself and supplied the prediction I had written before that run. AI helped verify that the saved baseline predictions match all 30 original held-out questions, check the score calculations, and format and explain the comparison below. It did not rerun either model or change the dataset, definitions, acceptance criteria, or Unit 5 results.
+
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
@@ -234,22 +236,29 @@ The completed run saved both `results.json` and the 30 held-out examples in [tes
 <!-- Both models on the same posts. `python baseline.py --trained results.json`
      prints this table for you. -->
 
+The zero-shot baseline is `facebook/bart-large-mnli`, using the three definitions in [label_definitions.txt](label_definitions.txt) without fine-tuning on my dataset. [baseline_results.json](baseline_results.json) confirms that it used those definitions and the held-out set. Its 30 saved prediction records match the text and labels in [test_split.csv](test_split.csv), in the same order. The trained column comes from the original seed-42 DistilBERT run in [results.json](results.json).
+
+Difference means **Trained minus Baseline**, calculated before rounding. Positive values favor the trained model; negative values favor the baseline.
+
 | Measure | Baseline | Trained | Difference |
 |---|---|---|---|
-| Overall accuracy |  |  |  |
-| Macro F1 |  |  |  |
-| F1 — `label_one` |  |  |  |
-| F1 — `label_two` |  |  |  |
+| Overall accuracy | 0.533 | 0.467 | -0.067 |
+| Macro F1 | 0.522 | 0.212 | -0.310 |
+| F1 — `computation` | 0.545 | 0.000 | -0.545 |
+| F1 — `conceptual` | 0.667 | 0.000 | -0.667 |
+| F1 — `proof_help` | 0.353 | 0.636 | +0.283 |
 
 **What I predicted before I looked:**
-<!-- Milestone 1 asks you to write this BEFORE seeing the trained numbers. A
-     prediction made afterwards isn't one. -->
+
+> Before running the baseline, I expected the fine-tuned model to perform better because it was trained on mathematics questions from this community.
+
+This is my pre-run note, added to the README after completing the baseline run.
 
 **What the gap actually means:**
-<!-- If the baseline matched your trained model, your fine-tuning added
-     nothing — and that is a real finding, not a failure. Say it plainly. -->
 
+The outcome went against my prediction: the baseline correctly classified 16 of 30 questions, compared with 14 of 30 for my trained model. The baseline's accuracy was about 6.7 percentage points higher, and its macro F1 was higher by approximately 0.310. On this held-out set, my fine-tuned model performed worse overall than the general zero-shot model.
 
+The trained model had a higher `proof_help` F1, but its saved confusion counts show that it predicted `proof_help` for every test question. That gave it recall of 1.000 for that label, with precision of 0.467, while both other labels had F1 of 0.000. The baseline correctly classified all six `computation` questions and seven of ten `conceptual` questions. This comparison shows a weakness in the trained model's coverage of the taxonomy. It is one 30-question comparison; the next milestone will test the trained model across three seeds before I make broader claims or choose an improvement.
 
 ---
 
