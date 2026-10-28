@@ -229,6 +229,8 @@ The completed run saved both `results.json` and the 30 held-out examples in [tes
 
 **Unit 6, Milestone 4 assistance:** AI checked each original acceptance target against the saved three-seed results, counted the unchanged dataset, and helped write the verdicts and evidence-based diagnoses. It also used the cached DistilBERT tokenizer for a read-only input-length check. This analysis did not run a model, change training settings, or alter the dataset, targets, or saved results. Possible underlying causes are identified as hypotheses rather than established findings.
 
+**Unit 6, Milestone 5 assistance:** AI selected and documented the single 128-to-256-token change before executing the after-experiment, then ran the same three seeds on MPS in a fresh local IPython process. It validated the saved results, compared them with the preserved before-results, and helped document the lack of classification improvement. No additional training setting was changed or tried after seeing the outcome. My dataset, labels, taxonomy, acceptance criteria, agreement report, and original result files were preserved.
+
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
@@ -394,22 +396,55 @@ The result shows that my initial decisions aligned with staff on this 30-post ex
 
 **What I changed:**
 
+Before running the after-experiment, I selected one change: **increase `MAX_LENGTH` from 128 to 256 tokens**. The notebook used `RUN_LABEL = "after"` to save the new results separately. The model, dataset and its order, taxonomy, acceptance criteria, 3 epochs, learning rate `2e-5`, batch size 16, and seeds 42, 7, and 2024 stayed unchanged. The MPS hardware, PyTorch 2.14.1, and between-seed memory cleanup also stayed the same. The original Unit 5 results and the three-seed before-results are preserved.
+
 **Which diagnosis pointed at it:**
+
+The Milestone 4 tokenizer check found that 192/200 questions exceed the original 128-token limit. At 256 tokens, 129/200 still exceed the limit, but 63 additional questions fit in full. The hypothesis is that preserving more question text may expose the author's requested outcome and help the model distinguish assistance types. This is a bounded context-length trial on an 8 GB Mac, keeping batch size fixed. It does not eliminate truncation: for example, the proof request beginning at token 329 remains beyond the new window. I am testing a possible contributor, not assuming it is the established cause of the majority-label predictions.
+
+**Run status:** The plan was recorded before execution. All three after-runs completed successfully on Apple Silicon GPU (MPS), with saved outputs in [takemeter.ipynb](takemeter.ipynb) and results in [results_three_seeds_after.json](results_three_seeds_after.json). Each seed used the same split as its corresponding before-run: 139 training, 31 validation, and 30 test examples. The before-results remain in [results_three_seeds_before.json](results_three_seeds_before.json).
 
 ### Run Log — After
 
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | ≥ 0.70 | 0.467 | 0.467 | 0.467 | MISSED |
+| 2. Macro F1 | ≥ 0.65 | 0.212 | 0.212 | 0.212 | MISSED |
+| 3. Every label's F1 | Each ≥ 0.60 | Minimum 0.000 | Minimum 0.000 | Minimum 0.000 | MISSED |
+| 4. Dataset size and balance | ≥ 200 reviewed questions; each label 20%–60% | 200; shares 20%–47% | 200; shares 20%–47% | 200; shares 20%–47% | MET |
+| 5. Prediction confidence | Most-confident third accuracy ≥ 0.80; gap over least-confident third ≥ 0.10 | High 0.700; gap 0.300 | High 0.600; gap 0.300 | High 0.800; gap 0.700 | MISSED |
+
+The rules and targets are the same as in the before-log. Each performance target must hold for all three seeds, using the unrounded saved values and the stated confidence-gap tolerance. Criterion 3's minimum is zero because both `computation` and `conceptual` have zero F1. Criterion 4 checks the same unchanged, human-reviewed dataset once. For Criterion 5, all gaps pass, but only seed 2024 meets the most-confident-third accuracy requirement. Each confidence group still contains ten predictions.
+
+**Classification comparison:** The values below hold separately for each of the three seeds, rather than being averages that conceal variation. Test supports remain 14 `proof_help`, 6 `computation`, and 10 `conceptual` for every seed.
+
+| Measure | Before: 128 tokens, each seed | After: 256 tokens, each seed | After minus before |
+|---|---|---|---|
+| Overall accuracy | 0.467 | 0.467 | 0.000 |
+| Macro F1 | 0.212 | 0.212 | 0.000 |
+| F1 — `proof_help` | 0.636 | 0.636 | 0.000 |
+| F1 — `computation` | 0.000 | 0.000 | 0.000 |
+| F1 — `conceptual` | 0.000 | 0.000 | 0.000 |
+
+**Confidence comparison:**
+
+| Seed | Most-confident accuracy before | After | Gap before | Gap after |
+|---|---|---|---|---|
+| 42 | 0.700 | 0.700 | 0.200 | 0.300 |
+| 7 | 0.700 | 0.600 | 0.500 | 0.300 |
+| 2024 | 0.900 | 0.800 | 0.800 | 0.700 |
+
+After-run least-confident-third accuracies are 0.400, 0.300, and 0.100 respectively. The gap changes do not produce a new MET verdict because most-confident accuracy remains below 0.80 for two seeds.
 
 **Did it help, and how do I know:**
 
-<!-- If it didn't, say so. Relabelling that didn't help is a genuinely
-     interesting result and earns full credit. -->
+Increasing the context window to 256 tokens **did not improve classification performance in this experiment**. For every seed, the model still predicted `proof_help` for all 30 test examples, with identical confusion counts, accuracy, macro F1, and per-label F1 before and after. All ten `conceptual` and all six `computation` questions were still missed. The acceptance-criteria verdicts remain four MISSED and one MET.
+
+Confidence rankings changed, but the most-confident-third accuracy was unchanged for seed 42 and fell by ten percentage points for seeds 7 and 2024. The confidence criterion remains MISSED overall. The attempt therefore provides no measured classification benefit and no improvement in the across-seed success verdicts.
+
+The saved training-runtime logs were approximately 152, 260, and 57 seconds for the after-runs, compared with approximately 16, 15, and 14 seconds before. The longer-input run experienced memory pressure on this 8 GB machine; these observations describe this run's resource cost, not a controlled speed benchmark.
+
+This result narrows the claim I can make: doubling the input window alone, under the same three-epoch setup, was insufficient to fix the majority-label predictions. It does not show that context length can never matter, since 129 questions remain truncated at 256 tokens, and it does not establish whether insufficient training exposure or math-specific annotation ambiguity contributed. I stopped after this one measured change and did not try additional settings to chase a better score.
 
 
 
