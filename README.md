@@ -223,6 +223,8 @@ The completed run saved both `results.json` and the 30 held-out examples in [tes
 
 **Unit 6, Milestone 1 assistance:** I ran the baseline myself and supplied the prediction I had written before that run. AI helped verify that the saved baseline predictions match all 30 original held-out questions, check the score calculations, and format and explain the comparison below. It did not rerun either model or change the dataset, definitions, acceptance criteria, or Unit 5 results.
 
+**Unit 6, Milestone 2 assistance:** After my VS Code run stalled and I reset the notebook, AI executed the notebook's setup and three-seed experiment in a fresh local IPython process, saved the notebook outputs, checked the result calculations, and prepared the run log and confusion matrix below. An initial attempt stalled under memory pressure; the completed run releases each seed's model and clears unused MPS cache before starting the next seed. This is execution cleanup, not the measured model improvement for Milestone 5. The training functions, hyperparameters, labels, taxonomy, criteria, and original Unit 5 result files were preserved.
+
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
@@ -267,30 +269,55 @@ The trained model had a higher `proof_help` F1, but its saved confusion counts s
 <!-- Five criteria across three seeds. The notebook's section 6 prints the
      spread table; the Target and Verdict columns are yours. -->
 
+Section 6 completed three independent training runs with seeds **42, 7, and 2024**, using `RUN_LABEL = "before"`. The saved results are in [results_three_seeds_before.json](results_three_seeds_before.json), and the execution outputs are in [takemeter.ipynb](takemeter.ipynb). All three runs used **Apple Silicon GPU (MPS), PyTorch 2.14.1**, `distilbert-base-uncased`, 3 epochs, learning rate `2e-5`, batch size 16, and maximum length 128 tokens.
+
+The original 200-question dataset and acceptance targets are unchanged. The temporary Section 4/5 switches stayed `False`, so this experiment did not overwrite `results.json` or `test_split.csv`. Section 6 now releases completed models between seeds to avoid retaining the previous model while allocating the next one; the training and evaluation procedures are unchanged.
+
+The measurements below use the five original criteria. Formal verdicts and diagnoses are reserved for Milestone 4, after the staff-label agreement check.
+
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | ≥ 0.70 | 0.467 | 0.467 | 0.467 | Pending |
+| 2. Macro F1 | ≥ 0.65 | 0.212 | 0.212 | 0.212 | Pending |
+| 3. Every label's F1 | Each ≥ 0.60 | Minimum 0.000 | Minimum 0.000 | Minimum 0.000 | Pending |
+| 4. Dataset size and balance | ≥ 200 reviewed questions; each label 20%–60% | 200; shares 20%–47% | 200; shares 20%–47% | 200; shares 20%–47% | Pending |
+| 5. Prediction confidence | Most-confident third accuracy ≥ 0.80; gap over least-confident third ≥ 0.10 | High 0.700; gap 0.200 | High 0.700; gap 0.500 | High 0.900; gap 0.800 | Pending |
+
+Criterion 3 reports the minimum label F1 above; the individual values are below. Criterion 4 checks the same full dataset for all seeds: 94 `proof_help` (47%), 40 `computation` (20%), and 66 `conceptual` (33%). Repeating those values does not represent three separate dataset reviews. For Criterion 5, each confidence third contains 10 predictions. Least-confident-third accuracy was 0.500, 0.200, and 0.100 respectively; gaps are calculated before rounding.
+
+**Per-label performance and spread:**
+
+| Measure | Seed 42 | Seed 7 | Seed 2024 | Spread |
+|---|---|---|---|---|
+| Overall accuracy | 0.467 | 0.467 | 0.467 | 0.000 |
+| Macro F1 | 0.212 | 0.212 | 0.212 | 0.000 |
+| F1 — `proof_help` | 0.636 | 0.636 | 0.636 | 0.000 |
+| F1 — `computation` | 0.000 | 0.000 | 0.000 | 0.000 |
+| F1 — `conceptual` | 0.000 | 0.000 | 0.000 | 0.000 |
+
+Each seed produced 139 training, 31 validation, and 30 test examples. Every test set contained 14 `proof_help`, 6 `computation`, and 10 `conceptual` questions. The six-example `computation` support remains small.
+
+Accuracy ranged from 0.467 to 0.467, a spread of 0.000. All three runs predicted `proof_help` for every test question. The identical class counts and predictions explain the identical accuracy and F1 values across different splits. This is a consistent majority-label prediction pattern; the zero spread does not establish that the classifier learned all three assistance types.
 
 ### Confusion matrix
 
 <!-- ⚠️ TYPED AS A MARKDOWN TABLE. The notebook prints one ready to paste.
      An image of a matrix earns nothing. -->
 
-| true \ predicted |  |  |  |
+Section 7 prints the first run's matrix, **seed 42**. The other two seeds produced the same counts. This table describes one 30-question test set; it does not pool the three test sets.
+
+| true \ predicted | proof_help | computation | conceptual |
 |---|---|---|---|
-| **** |  |  |  |
-| **** |  |  |  |
-| **** |  |  |  |
+| **proof_help** | 14 | 0 | 0 |
+| **computation** | 6 | 0 | 0 |
+| **conceptual** | 10 | 0 | 0 |
 
 **My biggest off-diagonal number, and what it means:**
 <!-- Not "the model made mistakes" — WHICH boundary it didn't learn, and which
      direction. "7 real analysis posts were called hot_take and only 3 went the
      other way" is a direction, not just an error rate. -->
 
+The largest off-diagonal count is **10 real `conceptual` questions predicted as `proof_help`**, compared with **0 real `proof_help` questions predicted as `conceptual`**. The model also classified all six `computation` questions as `proof_help`. These results establish the direction of the errors, but they do not yet establish whether annotation consistency, the training process, or another limitation caused them; the staff agreement check will inform that diagnosis.
 
 
 ---
