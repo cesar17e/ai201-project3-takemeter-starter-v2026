@@ -221,15 +221,7 @@ The completed run saved both `results.json` and the 30 held-out examples in [tes
 - *What came back:* Six unused questions from the original export, with source IDs, URLs, and suggested `computation` labels.
 - *What I changed:* The six out-of-scope assisted records were replaced programmatically. I personally reviewed and confirmed all six replacement labels. The dataset stayed at 200 questions, and the replacement notes retain their AI-assisted provenance.
 
-**Unit 6, Milestone 1 assistance:** I ran the baseline myself and supplied the prediction I had written before that run. AI helped verify that the saved baseline predictions match all 30 original held-out questions, check the score calculations, and format and explain the comparison below. It did not rerun either model or change the dataset, definitions, acceptance criteria, or Unit 5 results.
-
-**Unit 6, Milestone 2 assistance:** After my VS Code run stalled and I reset the notebook, AI executed the notebook's setup and three-seed experiment in a fresh local IPython process, saved the notebook outputs, checked the result calculations, and prepared the run log and confusion matrix below. An initial attempt stalled under memory pressure; the completed run releases each seed's model and clears unused MPS cache before starting the next seed. This is execution cleanup, not the measured model improvement for Milestone 5. The training functions, hyperparameters, labels, taxonomy, criteria, and original Unit 5 result files were preserved.
-
-**Unit 6, Milestone 3 assistance:** AI prepared the blank staff-label worksheet and checked its format, completeness, and preservation of the original post texts. I supplied all 30 initial labels myself before providing the TF's answer key. After the key arrived, AI verified its IDs and labels, renamed it to `data/staff_labels.csv` without changing its contents, ran `agreement.py`, and helped document the actual comparison and its limits. My initial labels were preserved unchanged. The measured result was 30 matches and zero disagreements, so no disagreement adjudications were needed.
-
-**Unit 6, Milestone 4 assistance:** AI checked each original acceptance target against the saved three-seed results, counted the unchanged dataset, and helped write the verdicts and evidence-based diagnoses. It also used the cached DistilBERT tokenizer for a read-only input-length check. This analysis did not run a model, change training settings, or alter the dataset, targets, or saved results. Possible underlying causes are identified as hypotheses rather than established findings.
-
-**Unit 6, Milestone 5 assistance:** AI selected and documented the single 128-to-256-token change before executing the after-experiment, then ran the same three seeds on MPS in a fresh local IPython process. It validated the saved results, compared them with the preserved before-results, and helped document the lack of classification improvement. No additional training setting was changed or tried after seeing the outcome. My dataset, labels, taxonomy, acceptance criteria, agreement report, and original result files were preserved.
+**How AI helped me spot errors and test a possible fix:** AI helped me understand that the higher `proof_help` F1 was coming from predicting that label for every question, while the other two labels had zero F1. It helped me read the confusion matrices, check each acceptance criterion, and identify how the 128-token input limit could hide an author's requested outcome. We used that evidence to plan and measure a longer-input trial. AI also helped address the stalled runs with memory cleanup between seeds. The tested model change did not fix the classification errors, and AI helped me report that result accurately instead of treating a plausible explanation as a proven solution.
 
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
@@ -452,14 +444,22 @@ This result narrows the claim I can make: doubling the input window alone, under
 
 ## What's Still Broken
 
-<!-- For each criterion still missed: what you'd do, and why you stopped. -->
+The 256-token trial left four criteria MISSED and the dataset-size-and-balance criterion MET. The remaining problems and proposed next investigations are:
 
+1. **Overall accuracy:** Accuracy remains 14/30, approximately 0.467, for every seed before and after the change, below the 0.70 target. I would next inspect training-set predictions and validation learning curves to distinguish inadequate learning of the assistance types from a persistent majority-label bias before selecting another controlled experiment.
 
+2. **Macro F1:** Macro F1 remains approximately 0.212, below 0.65, because `computation` and `conceptual` both have zero F1. I would review the mathematical training and validation examples for coverage of the primary-request boundary, including whether useful request text survives truncation. If that review identifies missing patterns, it would support a specific data-collection or input-processing experiment rather than an unsupported assumption that the labels are wrong.
+
+3. **Per-label performance:** `proof_help` reaches F1 of approximately 0.636, but the other labels remain at zero, missing the requirement that every label reach 0.60. I would seek an independent review using the mathematics definitions and inspect errors for both unpredicted labels. The six `computation` test examples also limit how stable its measured performance can be. The 100% staff agreement does not settle these questions because it uses a different community and taxonomy.
+
+4. **Prediction confidence:** After-run most-confident-third accuracy is 0.700, 0.600, and 0.800, so seeds 42 and 7 still miss the 0.80 requirement even though all confidence gaps pass. I would examine confidence reliability on a larger independent validation sample and consider calibration only as a separately planned experiment. Each current confidence group contains ten predictions, so one outcome changes its accuracy by ten percentage points.
+
+**Why I stopped here, for all four misses:** I completed the declared single-change experiment across the same three seeds and obtained no classification improvement. The longer-input runs also placed pressure on this 8 GB machine, while 129/200 posts still exceeded the new limit. I stopped after measuring and reporting that attempt rather than introducing an unplanned second change or lowering the targets. The investigations above are future proposals, not additional experiments performed for this submission.
 
 **The gap between what I meant my labels to capture and what the model
 learned:**
-<!-- Two sentences. Your confusion matrix is the evidence. -->
 
+I intended the labels to represent the author's primary requested outcome: a formal argument, a calculation, or conceptual understanding. Across all three seeds before and after the change, the confusion matrices show every test question assigned to `proof_help`, so the observed predictions do not demonstrate that the model learned the distinction I intended.
 
 
 <!-- ═════════════════════════════════════════════════════════════════════
@@ -479,23 +479,27 @@ learned:**
 
      SUBMISSION CHECKLIST — unit 6
 
-       [ ] Baseline vs. Trained table, with your prediction written beforehand
-       [ ] Run Log — Before, five criteria across three seeds
-       [ ] Confusion matrix TYPED AS A MARKDOWN TABLE
-       [ ] A verdict on every criterion
-       [ ] A diagnosis for every miss, using the agreement report as evidence
-       [ ] Agreement Report with every disagreement adjudicated
-       [ ] One improvement, with Run Log — After
-       [ ] What's Still Broken
-       [ ] results_three_seeds_before.json, results_three_seeds_after.json,
+       [x] Baseline vs. Trained table, with your prediction written beforehand
+       [x] Run Log — Before, five criteria across three seeds
+       [x] Confusion matrix TYPED AS A MARKDOWN TABLE
+       [x] A verdict on every criterion
+       [x] A diagnosis for every miss, using the agreement report as evidence
+       [x] Agreement Report with every disagreement adjudicated (none found)
+       [x] One measured improvement attempt, with Run Log — After
+       [x] What's Still Broken
+       [x] results_three_seeds_before.json, results_three_seeds_after.json,
            baseline_results.json and
            agreement_results.json committed
-       [ ] At least four new commits
-       [ ] The SAME repository URL as last unit
+       [x] At least four new commits
+       [x] The SAME repository URL as last unit
+
+       Remaining: commit this final README update, push, and submit the URL.
 
      Do not delete and recreate this repository.
      ═════════════════════════════════════════════════════════════════════ -->
 
 ---
+
+**Repository:** [cesar17e/ai201-project3-takemeter-starter-v2026](https://github.com/cesar17e/ai201-project3-takemeter-starter-v2026)
 
 📖 **How to run this project: [RUNNING.md](RUNNING.md)**
