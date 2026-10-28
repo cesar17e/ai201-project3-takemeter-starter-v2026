@@ -225,6 +225,10 @@ The completed run saved both `results.json` and the 30 held-out examples in [tes
 
 **Unit 6, Milestone 2 assistance:** After my VS Code run stalled and I reset the notebook, AI executed the notebook's setup and three-seed experiment in a fresh local IPython process, saved the notebook outputs, checked the result calculations, and prepared the run log and confusion matrix below. An initial attempt stalled under memory pressure; the completed run releases each seed's model and clears unused MPS cache before starting the next seed. This is execution cleanup, not the measured model improvement for Milestone 5. The training functions, hyperparameters, labels, taxonomy, criteria, and original Unit 5 result files were preserved.
 
+**Unit 6, Milestone 3 assistance:** AI prepared the blank staff-label worksheet and checked its format, completeness, and preservation of the original post texts. I supplied all 30 initial labels myself before providing the TF's answer key. After the key arrived, AI verified its IDs and labels, renamed it to `data/staff_labels.csv` without changing its contents, ran `agreement.py`, and helped document the actual comparison and its limits. My initial labels were preserved unchanged. The measured result was 30 matches and zero disagreements, so no disagreement adjudications were needed.
+
+**Unit 6, Milestone 4 assistance:** AI checked each original acceptance target against the saved three-seed results, counted the unchanged dataset, and helped write the verdicts and evidence-based diagnoses. It also used the cached DistilBERT tokenizer for a read-only input-length check. This analysis did not run a model, change training settings, or alter the dataset, targets, or saved results. Possible underlying causes are identified as hypotheses rather than established findings.
+
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
@@ -273,15 +277,15 @@ Section 6 completed three independent training runs with seeds **42, 7, and 2024
 
 The original 200-question dataset and acceptance targets are unchanged. The temporary Section 4/5 switches stayed `False`, so this experiment did not overwrite `results.json` or `test_split.csv`. Section 6 now releases completed models between seeds to avoid retaining the previous model while allocating the next one; the training and evaluation procedures are unchanged.
 
-The measurements below use the five original criteria. Formal verdicts and diagnoses are reserved for Milestone 4, after the staff-label agreement check.
+The measurements below use the five original criteria. Criteria 1, 2, 3, and 5 must pass for every seed; Criterion 4 checks the full dataset once. Verdicts use the unrounded saved values, with the `1e-12` tolerance specified for Criterion 5's confidence gap. The explanations incorporate the completed staff-label agreement check.
 
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1. Overall accuracy | ≥ 0.70 | 0.467 | 0.467 | 0.467 | Pending |
-| 2. Macro F1 | ≥ 0.65 | 0.212 | 0.212 | 0.212 | Pending |
-| 3. Every label's F1 | Each ≥ 0.60 | Minimum 0.000 | Minimum 0.000 | Minimum 0.000 | Pending |
-| 4. Dataset size and balance | ≥ 200 reviewed questions; each label 20%–60% | 200; shares 20%–47% | 200; shares 20%–47% | 200; shares 20%–47% | Pending |
-| 5. Prediction confidence | Most-confident third accuracy ≥ 0.80; gap over least-confident third ≥ 0.10 | High 0.700; gap 0.200 | High 0.700; gap 0.500 | High 0.900; gap 0.800 | Pending |
+| 1. Overall accuracy | ≥ 0.70 | 0.467 | 0.467 | 0.467 | MISSED |
+| 2. Macro F1 | ≥ 0.65 | 0.212 | 0.212 | 0.212 | MISSED |
+| 3. Every label's F1 | Each ≥ 0.60 | Minimum 0.000 | Minimum 0.000 | Minimum 0.000 | MISSED |
+| 4. Dataset size and balance | ≥ 200 reviewed questions; each label 20%–60% | 200; shares 20%–47% | 200; shares 20%–47% | 200; shares 20%–47% | MET |
+| 5. Prediction confidence | Most-confident third accuracy ≥ 0.80; gap over least-confident third ≥ 0.10 | High 0.700; gap 0.200 | High 0.700; gap 0.500 | High 0.900; gap 0.800 | MISSED |
 
 Criterion 3 reports the minimum label F1 above; the individual values are below. Criterion 4 checks the same full dataset for all seeds: 94 `proof_help` (47%), 40 `computation` (20%), and 66 `conceptual` (33%). Repeating those values does not represent three separate dataset reviews. For Criterion 5, each confidence third contains 10 predictions. Least-confident-third accuracy was 0.500, 0.200, and 0.100 respectively; gaps are calculated before rounding.
 
@@ -317,7 +321,7 @@ Section 7 prints the first run's matrix, **seed 42**. The other two seeds produc
      direction. "7 real analysis posts were called hot_take and only 3 went the
      other way" is a direction, not just an error rate. -->
 
-The largest off-diagonal count is **10 real `conceptual` questions predicted as `proof_help`**, compared with **0 real `proof_help` questions predicted as `conceptual`**. The model also classified all six `computation` questions as `proof_help`. These results establish the direction of the errors, but they do not yet establish whether annotation consistency, the training process, or another limitation caused them; the staff agreement check will inform that diagnosis.
+The largest off-diagonal count is **10 real `conceptual` questions predicted as `proof_help`**, compared with **0 real `proof_help` questions predicted as `conceptual`**. The model also classified all six `computation` questions as `proof_help`. These results establish the direction of the errors. The diagnoses below distinguish this observed behavior from possible underlying causes and explain the limits of the staff agreement evidence.
 
 
 ---
@@ -329,78 +333,60 @@ The largest off-diagonal count is **10 real `conceptual` questions predicted as 
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | Overall accuracy | ≥ 0.70 for every seed | MISSED | Every seed classified 14/30 questions correctly: 0.466667, below 0.70. |
+| 2 | Macro F1 | ≥ 0.65 for every seed | MISSED | Every seed scored 0.212121, below 0.65. |
+| 3 | F1 for every label | Each label ≥ 0.60 for every seed | MISSED | `proof_help` scored 0.636364, but `computation` and `conceptual` both scored 0.000 for all three seeds. |
+| 4 | Dataset size and balance | ≥ 200 reviewed questions; every label 20%–60% | MET | The unchanged dataset has 200 reviewed records: 94 `proof_help` (47%), 40 `computation` (20%), and 66 `conceptual` (33%). Counts, notes, and the recorded review confirmations support this check. |
+| 5 | Prediction confidence | Most-confident third accuracy ≥ 0.80 and gap ≥ 0.10 for every seed | MISSED | Most-confident-third accuracy was 0.700, 0.700, and 0.900; the gaps were 0.200, 0.500, and 0.800. All gaps passed, but seeds 42 and 7 missed the accuracy threshold. Seed 2024 passing alone is insufficient. |
 
 **Diagnoses**
 
-<!-- For each miss: the cause, and how you know. The four common causes are:
-     too few examples for a label, a boundary you applied inconsistently, a
-     genuinely hard label pair, and a task the model can't reach from this
-     much data.
+**Criterion 1 — accuracy:** The immediate cause of the miss is majority-label prediction. Each matrix in [results_three_seeds_before.json](results_three_seeds_before.json) shows all 30 predictions going to `proof_help`. This gets the 14 true proof questions right and all 16 other questions wrong, fixing accuracy at 14/30 regardless of which individual posts the split contains. Repeating this pattern across all three seeds supports a persistent failure to distinguish assistance types, rather than a single unfavorable split.
 
-     ⚠️ Use your agreement report as evidence. It is the only instrument you
-     have that can tell a LABELLING problem from a MODEL problem, and this
-     section is graded on whether you used it that way. -->
+**Criterion 2 — macro F1:** The same prediction pattern leaves two labels with no successful predictions. Macro F1 gives all three labels equal weight, so `(0.636364 + 0 + 0) / 3` is approximately 0.212121. The model's performance on the majority label cannot compensate for its failure on `computation` and `conceptual`. This directly explains the miss without assuming a particular cause for the failure to learn those distinctions.
 
+**Criterion 3 — per-label F1:** Every seed misses all six `computation` and all ten `conceptual` test questions. Both labels have precision, recall, and F1 of zero. `proof_help` achieves recall of 1.000 because every question receives that label, but its precision is only 14/30. The observed problem affects both non-majority labels, beyond the hardest `proof_help`/`conceptual` boundary. `computation` has only 28 training and six test examples, which limits learning evidence and makes its test metrics sensitive to individual cases; however, small test support alone does not explain the complete absence of predictions for both labels across all seeds.
 
+**Criterion 5 — confidence:** The confidence ranking does not consistently achieve the required reliability. For seeds 42 and 7, seven of the ten most-confident predictions were correct; the target requires at least eight. Their gaps over the least-confident third pass, but a relative improvement cannot replace the separate 0.80 accuracy requirement. For seed 42, mean winning confidence is approximately 0.511851 on correct predictions and 0.511015 on incorrect ones, showing very little separation. Seed 2024 reaches nine correct predictions in its most-confident third, but that ranking outcome does not recover either of the unpredicted labels or satisfy the across-seed requirement. Each group contains only ten predictions, so one changed outcome moves its accuracy by ten percentage points; the original target still applies.
+
+**Evidence about possible underlying causes:** A read-only check with the cached `distilbert-base-uncased` tokenizer found that **192/200 posts (96%) exceed the current 128-token limit**: 93/94 `proof_help`, 39/40 `computation`, and 60/66 `conceptual` posts. The CSV retains each complete post, but the training tokenizer truncates the model's input. For example, record 122's closing request, "Can $\eqref{1}$ be proved for $x,y,z>0$?", begins at token 329 in a 353-token post, counting special tokens. That explicit request is beyond the current input window. This establishes loss of potentially relevant text across the corpus; it does not establish that truncation caused every error. A longer input window is a plausible hypothesis for a later controlled experiment.
+
+The completed runs also contain only 27 training updates each. Validation loss decreases over the three epochs for every seed, while validation accuracy stays at 15/31, approximately 48.4%. This is consistent with the model adjusting its scores without learning useful decision boundaries under the current setup. Insufficient training exposure is another possible explanation, but the saved runs do not establish that more epochs would improve held-out performance. Neither hypothesis has been tested as an improvement here.
+
+**What the agreement report establishes:** [agreement_results.json](agreement_results.json) records 30/30 matches and zero disagreements, including all seven staff-marked borderline cases. There is no observed staff disagreement that supports a diagnosis of loosely applied rules in that exercise. However, those posts use the running-forum taxonomy, not the mathematics taxonomy. This evidence neither proves that the 200 math labels are consistent nor identifies a math boundary that should be relabeled. I therefore cannot attribute the model's collapse to annotation inconsistency from this report, and I cannot rule out math-specific label ambiguity either.
+
+**Limits of the diagnosis:** Majority-label prediction, truncated inputs, small per-label samples, and weak confidence separation are observed facts. Their causal contributions to the model's behavior remain uncertain. Criterion 4 passes, so the dataset does not violate the stated balance requirement; passing that check does not guarantee adequate examples for learning. Milestone 5 will test one justified change while keeping the other conditions fixed, rather than treating an untested explanation as established or lowering the original targets.
 
 ---
 
 ## Agreement Report
 
-<!-- Your rate against the staff set, and every disagreement adjudicated.
+**Status:** All 30 initial annotations and the official staff comparison are complete. There were no disagreements to adjudicate.
 
-     Remember you labelled these 30 under the STAFF taxonomy in
-     data/staff_taxonomy.md, not your own — so every argument below is made
-     from those definitions and those decision rules. -->
+I labeled all 30 running-forum posts in [my_staff_labels.csv](my_staff_labels.csv) using the definitions and boundary rules in [data/staff_taxonomy.md](data/staff_taxonomy.md). These use the staff categories, separate from my mathematics classifier's taxonomy. Validation confirmed exactly `text,label` columns, 30 valid labels, no duplicate posts, and every original post text preserved unchanged.
 
-**Agreement rate:** ___ / 30 = ___%
+| My initial label | Count |
+|---|---:|
+| `analysis` | 10 |
+| `hot_take` | 10 |
+| `reaction` | 10 |
+| **Total** | **30** |
 
-<!-- Nobody grades this number. A 60% who argues every disagreement from the
-     stated rules beats a 95% who wrote "staff was right" nine times. Several
-     of the 30 were chosen because they're genuinely ambiguous — you should be
-     winning some of these. -->
+**Agreement rate: 30 / 30 = 100%.**
 
-**Disagreements**
+The TF supplied the official answer key as `(SEND AFTER THEY ARE DONE) data-staff_labels.csv`. It is saved, with its contents unchanged, as [data/staff_labels.csv](data/staff_labels.csv), the filename expected by the script. All 30 staff IDs match [data/staff_posts.csv](data/staff_posts.csv), with no duplicate or missing IDs and only the three allowed labels.
 
-<!-- Three lines each: the post, both labels, and who you think is right and
-     why — grounded in the staff definitions you were both applying.
+Running `python agreement.py` produced [agreement_results.json](agreement_results.json): 30 posts compared, 30 agreements, 0 disagreements, and 0 staff posts missing from my annotations. My initial annotation file was preserved byte for byte during the comparison.
 
-     Then sort each into one of three piles:
-       (a) the rule covered it and I applied it loosely → a consistency problem
-       (b) the rule genuinely doesn't say               → a gap in the definitions
-       (c) the rule is ambiguous here and my reading is defensible → argue it.
-           This is a legitimate win.
-
-     Pile (a) is the one that matters most for your diagnosis: if you applied a
-     written rule two different ways on 30 posts, that is direct evidence about
-     what you did across your own 200. -->
-
-**1.**
-> *The post:*
->
-> *Staff said / I said:*
->
-> *My call, and why:*
->
-> *Which pile:*
-
-**2.**
-> *The post:*
->
-> *Staff said / I said:*
->
-> *My call, and why:*
->
-> *Which pile:*
+**Disagreements and adjudication:** None. Every initial label matched the official key, so there are no disagreement entries or final calls to record. This reports the actual comparison; no initial labels were changed to match staff.
 
 **What the pattern in my disagreements tells me:**
 
+There is no disagreement pattern in this set. The staff key marks seven posts as borderline, so the perfect agreement should not be interpreted as evidence that every post was obvious. The written rules provide concrete distinctions for those cases: a fact must carry the argument, a general claim differs from a personal response, and recency alone does not determine a label.
 
+For example, the key labels `sp_005` as `analysis` because its numerical comparisons support the argument, while `sp_014` is `hot_take` because its statistic decorates an unsupported conclusion. Both matched my initial labels. These examples illustrate the evidence-versus-keywords distinction that the staff rules require.
+
+The result shows that my initial decisions aligned with staff on this 30-post exercise. It does not prove that every boundary is unambiguous or that my separate 200-question mathematics dataset is error-free. The staff exercise uses a different community and taxonomy, so it cannot by itself establish the cause of the mathematics model's tendency to predict `proof_help` for every question. That limitation will remain explicit in the diagnoses.
 
 ---
 
